@@ -24,3 +24,9 @@ export interface WishlistItem {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface LottieStateProps {
+  src: string;
+  description: string;
+  children?: React.ReactNode;
+}

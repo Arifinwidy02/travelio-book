@@ -3,8 +3,12 @@
 import { addtoWishlist } from "@/services/bookService";
 import StarRating from './StarRating';
 import type { Book } from '@/types';
+import {  handleApiError } from '@/lib/api-error';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function BookCard({ book }: { book: Book }) {
+  const queryClient = useQueryClient();
+
   const handleWishlist = async () => {
     try {
       await addtoWishlist({
@@ -14,9 +18,10 @@ export default function BookCard({ book }: { book: Book }) {
         thumbnail: book.thumbnail,
         rating: book.rating
       });
+      queryClient.invalidateQueries({ queryKey: ['wishlist'] });
       alert('Berhasil ditambah ke wishlist!');
     } catch (error) {
-      alert('Gagal menambah ke wishlist (mungkin sudah ada)');
+      return handleApiError(error)
     }
   };
 

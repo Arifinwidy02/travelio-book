@@ -8,12 +8,13 @@ import { useDebounce } from 'use-debounce';
 import Link from 'next/link';
 import { X, Heart } from 'lucide-react';
 import type { BookData } from '@/types';
+import LottieState from '@/components/LottieState';
 
 export default function Home() {
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebounce(search || 'harry potter', 500);
 
-  const { data: books, isLoading, isError } = useQuery({
+  const { data: books, isLoading, isError, error } = useQuery({
     queryKey: ['books', debouncedSearch],
     queryFn: () => fetchGoogleBooks(debouncedSearch),
     enabled: debouncedSearch.length > 2,
@@ -54,9 +55,11 @@ export default function Home() {
           )}
         </div>
 
-        {isLoading && <p className="text-center">Sedang mencari buku...</p>}
+        {isLoading && (
+          <LottieState src="/lottie/Search File.json" description="Sedang mencari buku..." />
+        )}
         
-        {isError && <p className="text-center text-red-500">Terjadi kesalahan saat mengambil data.</p>}
+        {isError && <p className="text-center text-red-500">{(error as any)?.message || 'Terjadi kesalahan saat mengambil data.'}</p>}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {books?.map((book: BookData) => (
@@ -73,8 +76,8 @@ export default function Home() {
           ))}
         </div>
 
-        {!isLoading && books?.length === 0 && (
-          <p className="text-center text-gray-500">Tidak ada buku yang ditemukan.</p>
+        {!isLoading && !isError && books?.length === 0 && debouncedSearch.length > 2 && (
+          <LottieState src="/lottie/Empty State.json" description="Tidak ada buku yang ditemukan." />
         )}
       </div>
     </main>

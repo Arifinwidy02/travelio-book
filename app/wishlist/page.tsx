@@ -5,9 +5,10 @@ import { fetchWishlist } from '@/services/bookService';
 import BookCard from '@/components/BookCard';
 import Link from 'next/link';
 import type { WishlistItem } from '@/types';
+import LottieState from '@/components/LottieState';
 
 export default function WishlistPage() {
-  const { data: wishlist, isLoading, isError } = useQuery({
+  const { data: wishlist, isLoading, isError, error } = useQuery({
     queryKey: ['wishlist'],
     queryFn: fetchWishlist,
   });
@@ -25,21 +26,22 @@ export default function WishlistPage() {
           </Link>
         </div>
 
-        {isLoading && <p className="text-center">Memuat wishlist...</p>}
+        {isLoading && (
+          <LottieState src="/lottie/Search File.json" description="Memuat wishlist..." />
+        )}
 
         {isError && (
           <p className="text-center text-red-500">
-            Terjadi kesalahan saat mengambil data dari database.
+            {(error as any)?.message || 'Terjadi kesalahan saat mengambil data dari database.'}
           </p>
         )}
 
-        {!isLoading && wishlist?.length === 0 && (
-          <div className="text-center py-20 bg-white rounded-xl border border-dashed border-gray-300">
-            <p className="text-gray-500">Wishlist Anda masih kosong.</p>
+        {!isLoading && !isError && wishlist?.length === 0 && (
+          <LottieState src="/lottie/Empty State.json" description="Wishlist Anda masih kosong.">
             <Link href="/" className="mt-4 inline-block text-blue-500 underline">
               Cari buku sekarang
             </Link>
-          </div>
+          </LottieState>
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
