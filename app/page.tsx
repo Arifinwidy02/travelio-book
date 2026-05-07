@@ -26,7 +26,7 @@ export default function Home() {
     <main className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-center">Travelio Book Search</h1>
+          <h1 className="text-3xl font-bold text-center">Librify Book Search</h1>
           <Link
             href="/wishlist"
             className="flex items-center gap-2 bg-pink-500 hover:bg-pink-600 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors"
